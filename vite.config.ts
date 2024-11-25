@@ -25,7 +25,6 @@ export default defineConfig({
     }),
     tsconfigPaths()
   ],
-  // Add optimizeDeps for better handling of dependencies
   optimizeDeps: {
     include: [
       'lucide-react',
@@ -35,5 +34,21 @@ export default defineConfig({
       'clsx',
       'tailwind-merge'
     ]
+  },
+  build: {
+    outDir: 'public/build',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+        },
+      },
+    },
+    // Ensure assets are properly handled
+    assetsDir: 'assets',
+    // Generate sourcemaps for better debugging
+    sourcemap: true,
+    // Ensure we generate a clean build
+    emptyOutDir: true
   }
 });
