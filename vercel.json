@@ -1,6 +1,6 @@
 {
-    "buildCommand": "remix vite:build",
-    "devCommand": "remix vite:dev",
+    "buildCommand": "npm run build",
+    "devCommand": "npm run dev",
     "framework": "remix",
-    "outputDirectory": "public"
+    "outputDirectory": "public/build"
   }

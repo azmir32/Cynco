@@ -37,18 +37,15 @@ export default defineConfig({
   },
   build: {
     outDir: 'public/build',
+    assetsDir: 'assets',
+    sourcemap: true,
+    manifest: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-        },
-      },
-    },
-    // Ensure assets are properly handled
-    assetsDir: 'assets',
-    // Generate sourcemaps for better debugging
-    sourcemap: true,
-    // Ensure we generate a clean build
-    emptyOutDir: true
+          vendor: ['react', 'react-dom']
+        }
+      }
+    }
   }
 });
