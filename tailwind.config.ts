@@ -1,11 +1,11 @@
 import type { Config } from "tailwindcss";
+import animatePlugin from "tailwindcss-animate";
 
-export default {
+const config = {
   darkMode: ["class"],
   content: [
     "./app/**/*.{js,jsx,ts,tsx}",
     "./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}",
-    // Add these new paths for components
     './components/**/*.{ts,tsx}',
     './routes/**/*.{ts,tsx}',
   ],
@@ -80,14 +80,15 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        // Add any additional keyframes here
+        
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        // Add any additional animations here
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animatePlugin],
 } satisfies Config;
+
+export default config;

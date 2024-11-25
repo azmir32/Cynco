@@ -96,7 +96,7 @@ export async function getPosts(): Promise<Post[]> {
       author: {
         id: 'auth3',
         name: 'Alexandra Peters',
-        avatar: 'images/author/alex.svg',
+        avatar: 'images/author/Alexandra.svg',
         bio: 'Security Expert | CTO'
       },
       tags: ['security', 'best-practices', 'data-protection'],

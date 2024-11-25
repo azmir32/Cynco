@@ -1,42 +1,52 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
-import styles from "./tailwind.css";
-import Header from "~/components/header"
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useRouteError,
+  isRouteErrorResponse,
+} from "@remix-run/react";
+import Header from "~/components/header";
 
-// Links function for adding stylesheets or favicons
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: styles },
-];
+// Import CSS directly without default import
+import "~/styles/tailwind.css";
 
-// Meta function for setting default meta tags
+// Links are handled differently in Vite
+export const links: LinksFunction = () => {
+  return [];
+};
+
 export const meta: MetaFunction = () => {
   return [
     { charset: "utf-8" },
     { title: "Cynco.io" },
-    { name: "viewport", content: "width=device-width,initial-scale=1" },
+    { viewport: "width=device-width,initial-scale=1" },
+    { description: "Welcome to Cynco.io" },
   ];
 };
 
 export default function App() {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="bg-gray-50 text-gray-900">
-        {/* Shared Header */}
-        <Header />
+      <body className="h-full bg-background text-foreground">
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          
+          <main className="flex-1 p-4">
+            <Outlet />
+          </main>
 
-        {/* Main Content Area */}
-        <main className="min-h-screen p-4">
-          <Outlet />
-        </main>
-
-        {/* Shared Footer */}
-        <footer className="bg-gray-800 text-white p-4 text-center">
-          <p>©{new Date().getFullYear()} Cynco.io All rights reserved.</p>
-        </footer>
+          <footer className="bg-gray-800 p-4 text-center text-white">
+            <p>©{new Date().getFullYear()} Cynco.io All rights reserved.</p>
+          </footer>
+        </div>
 
         <ScrollRestoration />
         <Scripts />
@@ -46,34 +56,50 @@ export default function App() {
   );
 }
 
-// ErrorBoundary for catching errors
-export function ErrorBoundary({ error }: { error: Error }) {
-  return (
-    <html>
-      <head>
-        <title>Error</title>
-      </head>
-      <body>
-        <div className="min-h-screen flex items-center justify-center bg-red-100 text-red-800">
-          <h1 className="text-2xl font-bold">Something went wrong!</h1>
-          <pre className="mt-4">{error.message}</pre>
-        </div>
-        <Scripts />
-      </body>
-    </html>
-  );
+interface ErrorResponse {
+  data: {
+    message: string;
+  };
+  status: number;
+  statusText: string;
 }
 
-// CatchBoundary for handling 404 or other unexpected responses
-export function CatchBoundary() {
+export function ErrorBoundary() {
+  const error = useRouteError();
+  
+  let errorMessage: string;
+  let errorStatus: string;
+
+  if (isRouteErrorResponse(error)) {
+    errorMessage = error.data?.message || 'An unexpected error occurred';
+    errorStatus = `${error.status} ${error.statusText}`;
+  } else if (error instanceof Error) {
+    errorMessage = error.message;
+    errorStatus = 'Error';
+  } else {
+    errorMessage = 'An unexpected error occurred';
+    errorStatus = 'Error';
+  }
+
   return (
-    <html>
+    <html lang="en" className="h-full">
       <head>
-        <title>Not Found</title>
+        <title>Error - Cynco.io</title>
+        <Meta />
+        <Links />
       </head>
-      <body>
-        <div className="min-h-screen flex items-center justify-center bg-yellow-100 text-yellow-800">
-          <h1 className="text-2xl font-bold">404 - Page Not Found</h1>
+      <body className="h-full">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-destructive/10 p-6">
+          <div className="rounded-lg bg-white p-8 shadow-lg">
+            <h1 className="mb-4 text-2xl font-bold text-destructive">{errorStatus}</h1>
+            <p className="text-gray-600">{errorMessage}</p>
+            <a
+              href="/"
+              className="mt-6 inline-block rounded bg-primary px-4 py-2 text-white hover:bg-primary/90"
+            >
+              Return Home
+            </a>
+          </div>
         </div>
         <Scripts />
       </body>

@@ -14,26 +14,18 @@ export default function handleRequest(
   remixContext: EntryContext,
   loadContext: AppLoadContext
 ) {
-  // Use type assertion to help TypeScript understand the isbot function
+  if (request.url.endsWith('.css')) {
+    return new Response(null, { status: 404 });
+  }
+
   const isbot = (isbotModule as any).default || isbotModule.isbot;
   const userAgent = request.headers.get("user-agent");
   const prohibitOutOfOrderStreaming = isbot(userAgent) || remixContext.isSpaMode;
 
   return prohibitOutOfOrderStreaming
-    ? handleBotRequest(
-        request,
-        responseStatusCode,
-        responseHeaders,
-        remixContext
-      )
-    : handleBrowserRequest(
-        request,
-        responseStatusCode,
-        responseHeaders,
-        remixContext
-      );
+    ? handleBotRequest(request, responseStatusCode, responseHeaders, remixContext)
+    : handleBrowserRequest(request, responseStatusCode, responseHeaders, remixContext);
 }
-// Remove the old isBotRequest function since we're using isbot directly
 
 function handleBotRequest(
   request: Request,
