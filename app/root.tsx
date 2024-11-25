@@ -11,13 +11,15 @@ import {
 } from "@remix-run/react";
 import Header from "~/components/header";
 
-// Import CSS directly without default import
-import "~/styles/tailwind.css";
+// Remove the direct CSS import and use this instead
+import styles from "./styles/app.css?url";
 
-// Links are handled differently in Vite
-export const links: LinksFunction = () => {
-  return [];
-};
+export const links: LinksFunction = () => [
+  { 
+    rel: "stylesheet",
+    href: styles
+  }
+];
 
 export const meta: MetaFunction = () => {
   return [
@@ -54,14 +56,6 @@ export default function App() {
       </body>
     </html>
   );
-}
-
-interface ErrorResponse {
-  data: {
-    message: string;
-  };
-  status: number;
-  statusText: string;
 }
 
 export function ErrorBoundary() {

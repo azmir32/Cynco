@@ -1,7 +1,26 @@
 {
     "buildCommand": "npm run build",
     "devCommand": "npm run dev",
-    "installCommand": "npm install",
     "framework": "remix",
-    "outputDirectory": "public/build"
+    "installCommand": "npm install",
+    "regions": ["iad1"],
+    "builds": [
+      {
+        "src": "build/index.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/build/(.*)",
+        "headers": {
+          "cache-control": "public, max-age=31536000, immutable"
+        },
+        "continue": true
+      },
+      {
+        "src": "/(.*)",
+        "dest": "build/index.js"
+      }
+    ]
   }
